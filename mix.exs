@@ -36,7 +36,11 @@ defmodule CurrencyConversion.MixProject do
       {:jason, ">= 1.0.0"},
       {:tesla, "~> 1.3.0"},
       {:decimal, "~> 1.0"},
-      {:ex_doc, "~> 0.21", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.21", only: :dev, runtime: false},
+      {:cowboy, "~> 2.4"},
+      {:poison, "~> 3.1"},
+      {:plug, "~> 1.6"},
+      {:plug_cowboy, "~> 2.0"}
     ]
   end
 end

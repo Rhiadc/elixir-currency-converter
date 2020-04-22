@@ -1,6 +1,6 @@
 {application,currency_conversion,
              [{applications,[kernel,stdlib,elixir,logger,decimal,jason,
-                             hackney,tesla]},
+                             hackney,cowboy,tesla]},
               {description,"currency_conversion"},
               {modules,['Elixir.ApiHandler','Elixir.Conversion',
                         'Elixir.CurrencyConversion.Application',

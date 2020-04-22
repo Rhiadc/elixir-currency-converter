@@ -3,6 +3,13 @@ defmodule Conversion do
   Handle the currency conversion.
   """
 
+  @base_url "https://api.exchangeratesapi.io/latest"
+
+  use Tesla
+
+  plug(Tesla.Middleware.BaseUrl, @base_url)
+  plug(Tesla.Middleware.JSON)
+
   @type conversion_result ::
           {:error, <<_::64, _::_*8>>}
           | {:ok, %{amount_converted: float, amount_to_convert: number, from: binary, to: binary}}
@@ -27,8 +34,13 @@ defmodule Conversion do
   """
 
   @spec handle_conversion(binary, binary, number) :: conversion_result
-  def handle_conversion(from, to, amount) when amount > 0 do
+  def handle_conversion(from, to, amount) do
+    amount_parsed = if is_binary(amount), do: Float.parse(amount) |> elem(0), else: amount
+
     cond do
+      amount_parsed <= 0 ->
+        {:error, "Amount must be bigger than 0"}
+
       !is_valid_currency?(from) ->
         {:error, "#{from} isn't supported."}
 
@@ -38,7 +50,7 @@ defmodule Conversion do
       true ->
         {:ok, rates} = get_latest_rates(from)
 
-        converted = convert(rates["rates"][String.upcase(to)], amount)
+        converted = convert(rates["rates"][String.upcase(to)], amount_parsed)
 
         {:ok,
          %{
@@ -64,7 +76,7 @@ defmodule Conversion do
 
   @spec get_latest_rates :: {:error, <<_::272>>} | {:ok, any}
   def get_latest_rates do
-    {:ok, response} = ApiHandler.request_get("/")
+    {:ok, response} = request_rates("/")
 
     if response.status == 200 do
       {:ok, response.body}
@@ -75,7 +87,7 @@ defmodule Conversion do
 
   @spec get_latest_rates(binary) :: {:error, <<_::272>>} | {:ok, any}
   def get_latest_rates(base) when byte_size(base) > 0 do
-    {:ok, response} = ApiHandler.request_get("?base=#{String.upcase(base)}")
+    {:ok, response} = request_rates("?base=#{String.upcase(base)}")
 
     if response.status == 200 do
       {:ok, response.body}
@@ -89,5 +101,9 @@ defmodule Conversion do
     {:ok, rates} = get_latest_rates()
 
     Map.keys(rates["rates"])
+  end
+
+  defp request_rates(extend) do
+    get(@base_url <> extend)
   end
 end
