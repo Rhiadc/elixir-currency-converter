@@ -50,9 +50,7 @@ From the terminal in the project's root folder, run the command to enter in the 
 iex -S mix
 ```
 
-The conversion function is **handle_conversion** from the **Conversion** module.
-
-handle_conversion/3 - from, to, amount
+*handle_conversion/3 - from, to, amount*
 
 Converting an amount of 1 BRL to USD, we will have in the current values the following result:
 
