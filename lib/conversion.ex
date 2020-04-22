@@ -1,10 +1,30 @@
 defmodule Conversion do
-  @type conversion_result :: %{
-          from: binary,
-          to: binary,
-          amount_to_convert: number,
-          amount_converted: number
-        }
+  @moduledoc """
+  Handle the currency conversion.
+  """
+
+  @type conversion_result ::
+          {:error, <<_::64, _::_*8>>}
+          | {:ok, %{amount_converted: float, amount_to_convert: number, from: binary, to: binary}}
+
+  @doc """
+  Return the currency conversion.
+
+  ## Parameters
+
+    - from: String that represents the 3 digits currency to convert from.
+    - to: String that represents the 3 digits currency to convert to.
+    - amount: Number that represents the amount to be converted.
+
+  ## Examples
+
+      iex> Conversion.handle_conversion("usd", "brl", 1)
+      {:ok, %{amount_converted: 5.32, amount_to_convert: 1, from: "usd", to: "brl"}}
+
+       iex> Conversion.handle_conversion("unknowncurrency", "brl", 1)
+      {:error, "unknowncurrency isn't supported."}
+
+  """
 
   @spec handle_conversion(binary, binary, number) :: conversion_result
   def handle_conversion(from, to, amount) when amount > 0 do
@@ -52,6 +72,7 @@ defmodule Conversion do
     end
   end
 
+  @spec get_latest_rates(binary) :: {:error, <<_::272>>} | {:ok, any}
   def get_latest_rates(base) when byte_size(base) > 0 do
     {:ok, response} = ApiHandler.request_get("?base=#{String.upcase(base)}")
 
