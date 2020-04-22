@@ -10,6 +10,7 @@ The main objective of this application is to provide a way to make currency conv
 * [Poison](https://github.com/devinus/poison) - JSON parser.
 * [Cowboy](https://github.com/ninenines/cowboy) - Small Erlang/OTP HTTP server.
 * [ExchangeRateApi](https://exchangeratesapi.io/) - API for exchange rates.
+* [ExDoc](https://github.com/elixir-lang/ex_doc) - Produces HTML and EPUB documentation.
 
 #### Installation 
 
@@ -104,4 +105,24 @@ RESPONSE
   "result": null,
   "error": "Amount is required"
 }
+``` 
+
+#### Documentation
+
+From the terminal in the project's root folder, run the command to generate modules and functions documentation:
+
+``` 
+mix docs
+``` 
+
+The docs folder will be created at the root of the project where all the HTML files with the documentation will be located.
+
+#### Tests
+
+The project contains some unit tests.
+
+From the terminal in the project's root folder, run the command to run all the unit tests:
+
+``` 
+mix test
 ``` 
