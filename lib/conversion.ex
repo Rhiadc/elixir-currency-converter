@@ -21,7 +21,7 @@ defmodule Conversion do
       iex> Conversion.handle_conversion("usd", "brl", 1)
       {:ok, %{amount_converted: 5.32, amount_to_convert: 1, from: "usd", to: "brl"}}
 
-       iex> Conversion.handle_conversion("unknowncurrency", "brl", 1)
+      iex> Conversion.handle_conversion("unknowncurrency", "brl", 1)
       {:error, "unknowncurrency isn't supported."}
 
   """
@@ -62,6 +62,7 @@ defmodule Conversion do
     Enum.member?(currencies, String.upcase(currency))
   end
 
+  @spec get_latest_rates :: {:error, <<_::272>>} | {:ok, any}
   def get_latest_rates do
     {:ok, response} = ApiHandler.request_get("/")
 
