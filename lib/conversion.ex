@@ -26,7 +26,6 @@ defmodule Conversion do
   ## Examples
 
       iex> Conversion.handle_conversion("usd", "brl", 1)
-      {:ok, %{amount_converted: 5.32, amount_to_convert: 1, from: "usd", to: "brl"}}
 
       iex> Conversion.handle_conversion("unknowncurrency", "brl", 1)
       {:error, "unknowncurrency isn't supported."}

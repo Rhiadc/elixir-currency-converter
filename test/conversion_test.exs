@@ -2,6 +2,24 @@ defmodule ConversionTest do
   use ExUnit.Case
   doctest Conversion
 
+  test "should convert currency and return formatted response" do
+    {:ok, result} = Conversion.handle_conversion("brl", "usd", 1)
+
+    assert result.amount_to_convert == 1
+  end
+
+  test "should fail convert currency and return unsupported error" do
+    {:error, error} = Conversion.handle_conversion("unknown", "usd", 1)
+
+    assert error == "unknown isn't supported."
+  end
+
+  test "should fail convert currency and return amount error" do
+    {:error, error} = Conversion.handle_conversion("brl", "usd", 0)
+
+    assert error == "Amount must be bigger than 0"
+  end
+
   test "should get latest rates based on EURO" do
     {:ok, rates} = Conversion.get_latest_rates()
 

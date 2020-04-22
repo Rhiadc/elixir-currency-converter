@@ -1,4 +1,6 @@
 defmodule ConversionController do
+  require Logger
+
   @moduledoc """
   Handle api calls for conversion.
   """
@@ -8,14 +10,26 @@ defmodule ConversionController do
 
   """
   def handle_convert(params) do
-    convert = Conversion.handle_conversion(params["from"], params["to"], params["amount"])
+    cond do
+      params["from"] in ["", nil] ->
+        request_return(nil, "From is required")
 
-    case convert do
-      {:error, error} ->
-        request_return(nil, error)
+      params["to"] in ["", nil] ->
+        request_return(nil, "To is required")
 
-      {:ok, result} ->
-        request_return(result, false)
+      params["amount"] in ["", nil] ->
+        request_return(nil, "Amount is required")
+
+      true ->
+        convert = Conversion.handle_conversion(params["from"], params["to"], params["amount"])
+
+        case convert do
+          {:error, error} ->
+            request_return(nil, error)
+
+          {:ok, result} ->
+            request_return(result, false)
+        end
     end
   end
 
