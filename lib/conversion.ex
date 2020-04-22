@@ -16,9 +16,9 @@ defmodule Conversion do
         {:error, "#{to} isn't supported."}
 
       true ->
-        rates = get_latest_rates(from)["rates"]
+        {:ok, rates} = get_latest_rates(from)
 
-        converted = convert(rates[String.upcase(to)], amount)
+        converted = convert(rates["rates"][String.upcase(to)], amount)
 
         {:ok,
          %{
@@ -43,20 +43,20 @@ defmodule Conversion do
   end
 
   def get_latest_rates do
-    {:ok, response} = ApiService.request_get("/")
+    {:ok, response} = ApiHandler.request_get("/")
 
     if response.status == 200 do
-      response.body
+      {:ok, response.body}
     else
       {:error, "Fail get latest rates from server!"}
     end
   end
 
   def get_latest_rates(base) when byte_size(base) > 0 do
-    {:ok, response} = ApiService.request_get("?base=#{String.upcase(base)}")
+    {:ok, response} = ApiHandler.request_get("?base=#{String.upcase(base)}")
 
     if response.status == 200 do
-      response.body
+      {:ok, response.body}
     else
       {:error, "Fail get latest rates from server!"}
     end
@@ -64,7 +64,7 @@ defmodule Conversion do
 
   @spec get_valid_currencies :: [...]
   def get_valid_currencies do
-    rates = get_latest_rates()
+    {:ok, rates} = get_latest_rates()
 
     Map.keys(rates["rates"])
   end

@@ -1,8 +1,8 @@
 defmodule CurrencyConversionTest do
   use ExUnit.Case
-  doctest CurrencyConversion
+  doctest Conversion
 
   test "greets the world" do
-    assert CurrencyConversion.hello() == :world
+    assert "test" == "test"
   end
 end
